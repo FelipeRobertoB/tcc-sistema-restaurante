@@ -1,0 +1,67 @@
+.table-container {
+  width: 100%;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.table-scroll {
+  overflow-y: auto;
+  max-height: 400px; 
+}
+
+.ui-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.ui-table thead th {
+  position: sticky;
+  top: 0;
+  background-color: var(--bg-input); 
+  color: var(--text-secondary);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.7rem; 
+  letter-spacing: 0.05em;
+  padding: var(--space-3);
+  
+  z-index: 2;
+  border-bottom: 2px solid var(--border-color);
+  white-space: nowrap;
+  text-align: left;
+}
+.ui-table tbody td {
+  padding: var(--space-3);
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-primary);
+  vertical-align: middle;
+}
+.ui-table tbody tr:nth-child(even) {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+.ui-table tbody tr:hover {
+  background-color: var(--bg-surface-hover);
+}
+.text-right, .ui-table th.text-right { text-align: right; }
+.text-center, .ui-table th.text-center { text-align: center; }
+.text-left,   .ui-table th.text-left   { text-align: left; }
+.table-empty {
+  padding: var(--space-8);
+  text-align: center;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+.row-pendente {
+  background-color: rgba(239, 68, 68, 0.08) !important;
+  color: var(--danger) !important;
+  font-weight: 500;
+}
+.row-pendente .text-muted {
+  color: rgba(220, 38, 38, 0.7) !important;
+}

@@ -1,0 +1,212 @@
+### =================================================================
+### CENÁRIO 1: O FLUXO DA COMANDA (MESA 1)
+### Testamos: Auto-abertura, Adicionar Item, Listar
+### =================================================================
+
+### 1. Adicionar 2 Cocas na Mesa 1 (Que deve estar LIVRE)
+# Esperado: 200 OK. O banco deve mudar a mesa para "ABERTA" automaticamente.
+POST http://localhost:8080/comanda/adicionar
+Content-Type: application/json
+
+{
+  "idMesa": 1,
+  "codigoProduto": "100",
+  "quantidade": 2
+}
+
+### 2. Adicionar 1 Hamburguer na Mesa 1
+# Esperado: 200 OK.
+POST http://localhost:8080/comanda/adicionar
+Content-Type: application/json
+
+{
+  "idMesa": 1,
+  "codigoProduto": "200",
+  "quantidade": 1
+}
+
+### 3. Listar consumo da Mesa 1
+# Esperado: Lista com 2 itens (Coca e Hamburguer).
+# Verifique se o JSON traz "nomeProduto", "preco", "total".
+GET http://localhost:8080/comanda/mesa/1
+
+
+### =================================================================
+### CENÁRIO 2: O FLUXO FINANCEIRO (MESA 1)
+### Testamos: Bloqueio, Taxa de Serviço e Pagamento
+### =================================================================
+
+### 4. Pedir a Conta (Pré-fechamento)
+# Esperado: 200 OK.
+# JSON deve mostrar:
+# - subtotal: 37.00 (12 da coca + 25 do burguer)
+# - valorTaxa: 3.70 (10%)
+# - totalFinal: 40.70
+# STATUS DA MESA NO BANCO DEVE VIRAR: "PENDENTE_PAGAMENTO"
+POST http://localhost:8080/pagamento/conta/1
+
+### 5. Tentar adicionar item na mesa bloqueada (Teste de Segurança)
+# Esperado: 500 Internal Server Error
+# Mensagem: "Mesa em pagamento. Reabra a mesa..."
+POST http://localhost:8080/comanda/adicionar
+Content-Type: application/json
+
+{
+  "idMesa": 1,
+  "codigoProduto": "300",
+  "quantidade": 1
+}
+
+### 6. Cliente decidiu pedir mais: REABRIR A MESA
+# Esperado: 200 OK. Status volta para "ABERTA".
+POST http://localhost:8080/mesas/2/reabrir
+
+### 7. Adicionar a sobremesa (Agora deve funcionar)
+POST http://localhost:8080/comanda/adicionar
+Content-Type: application/json
+
+{
+  "idMesa": 1,
+  "codigoProduto": "300",
+  "quantidade": 1
+}
+
+### 8. Fechar a Conta Definitivamente (Pagamento)
+# Esperado: 200 OK. Gera a Venda e a Mesa 1 vira "LIVRE".
+POST http://localhost:8080/pagamento/fechar
+Content-Type: application/json
+
+{
+  "idMesa": 1,
+  "formaPagamento": "CARTAO_CREDITO",
+  "percentualTaxaServico": 10.00
+}
+
+
+### =================================================================
+### CENÁRIO 3: OPERAÇÕES DE GERENTE (MESA 2 e 3)
+### Testamos: Transferência de Mesa e Cancelamento
+### =================================================================
+
+### 8.5. CORREÇÃO: Abrir a Mesa 2 (Pois ela nasce FECHADA no sistema)
+# Esperado: 200 OK
+POST http://localhost:8080/mesas/2/abrir
+
+### 9. Agora sim: Lançar item na Mesa 2
+POST http://localhost:8080/comanda/adicionar
+Content-Type: application/json
+
+{ "idMesa": 2, "codigoProduto": "100", "quantidade": 1 }
+
+### 10. Transferir Mesa 2 para Mesa 3 (Cliente trocou de lugar)
+POST http://localhost:8080/mesas/transferir
+Content-Type: application/json
+
+{
+  "idMesaOrigem": 2,
+  "idMesaDestino": 3
+}
+
+### 11. Conferir se a Mesa 3 recebeu o item
+GET http://localhost:8080/comanda/mesa/3
+
+### 12. Conferir se a Mesa 2 está vazia
+GET http://localhost:8080/comanda/mesa/2
+
+### 13. Cancelar Mesa 3
+DELETE http://localhost:8080/mesas/3/cancelar
+
+### =================================================================
+### CENÁRIO 4: OPERAÇÕES GRANULARES (ITEM POR ITEM)
+### Testamos: Cancelar Item Específico e Transferir Item Único
+### =================================================================
+
+### 14. Preparação: Adicionar 2 itens na Mesa 1
+# Item ID 1 (Coca) e Item ID 2 (Hambúrguer)
+POST http://localhost:8080/comanda/adicionar
+Content-Type: application/json
+
+{ "idMesa": 1, "codigoProduto": "100", "quantidade": 1 }
+
+### (Adicionando o segundo item)
+POST http://localhost:8080/comanda/adicionar
+Content-Type: application/json
+
+{ "idMesa": 1, "codigoProduto": "200", "quantidade": 1 }
+
+### 15. Listar para conferir os IDs
+# Olhe no JSON: O primeiro item deve ser ID 1 e o segundo ID 2.
+GET http://localhost:8080/comanda/mesa/1
+
+
+### 16. CANCELAR APENAS O ITEM 1 (Coca-Cola)
+# O cliente desistiu da bebida, mas vai comer o lanche.
+DELETE http://localhost:8080/comanda/item/1
+
+
+### 17. Conferir se o Item 1 sumiu e o 2 ficou
+# Esperado: Lista deve ter apenas o "Hambúrguer".
+GET http://localhost:8080/comanda/mesa/1
+
+
+### 18. TRANSFERIR O ITEM 2 (Hambúrguer) PARA A MESA 4
+# O cliente encontrou amigos na Mesa 4 e foi sentar lá com o lanche.
+POST http://localhost:8080/comanda/transferir-item
+Content-Type: application/json
+
+{
+  "idItem": 2,
+  "idMesaDestino": 4
+}
+
+
+### 19. Conferir Mesa 1 (Origem)
+# Esperado: Lista Vazia [] (O único item que restava foi embora)
+GET http://localhost:8080/comanda/mesa/1
+
+
+### 20. Conferir Mesa 4 (Destino)
+# Esperado: Deve ter o Hambúrguer (e a mesa deve ter virado "ABERTA" automaticamente)
+GET http://localhost:8080/comanda/mesa/4### =================================================================
+### CENÁRIO 4: OPERAÇÕES GRANULARES (ITEM POR ITEM)
+### Testamos: Cancelar Item Específico e Transferir Item Único
+### =================================================================
+
+### 14. Preparação: Adicionar 2 itens na Mesa 1
+# Item ID 1 (Coca) e Item ID 2 (Hambúrguer)
+POST http://localhost:8080/comanda/adicionar
+Content-Type: application/json
+
+{ "idMesa": 1, "codigoProduto": "100", "quantidade": 1 }
+
+### (Adicionando o segundo item)
+POST http://localhost:8080/comanda/adicionar
+Content-Type: application/json
+
+{ "idMesa": 1, "codigoProduto": "200", "quantidade": 1 }
+
+### 15. Listar para conferir os IDs
+# Olhe no JSON: O primeiro item deve ser ID 1 e o segundo ID 2.
+GET http://localhost:8080/comanda/mesa/1
+
+
+### 16. CANCELAR APENAS O ITEM 8 (Coca-Cola Nova)
+DELETE http://localhost:8080/comanda/item/8
+
+### 17. Conferir se o Item 8 sumiu e o 9 ficou
+GET http://localhost:8080/comanda/mesa/1
+
+### 18. TRANSFERIR O ITEM 9 (Hambúrguer) PARA A MESA 4
+POST http://localhost:8080/comanda/transferir-item
+Content-Type: application/json
+
+{
+  "idItem": 9,
+  "idMesaDestino": 4
+}
+
+### 19. Conferir Mesa 1 (Deve estar vazia)
+GET http://localhost:8080/comanda/mesa/1
+
+### 20. Conferir Mesa 4 (Deve ter o item 9)
+GET http://localhost:8080/comanda/mesa/4

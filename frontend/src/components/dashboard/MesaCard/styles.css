@@ -1,0 +1,16 @@
+.mesa-widget {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid transparent; 
+  border-color: var(--border-color); 
+}
+
+.mesa-widget:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  border-color: var(--status-color) !important;
+}
+
+.mesa-money {
+  font-feature-settings: "tnum";
+  font-variant-numeric: tabular-nums;
+}

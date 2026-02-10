@@ -1,0 +1,28 @@
+.vendas-page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: var(--bg-page);
+}
+
+.vendas-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-4);
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.content-split {
+  display: grid;
+  grid-template-columns: 350px 1fr;
+  gap: var(--space-6);
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .content-split {
+    grid-template-columns: 1fr;
+  }
+}
