@@ -7,7 +7,7 @@
 > Sistema web completo para gerenciamento de pedidos, mesas e fluxo de cozinha em tempo real.
 
 ![Status](https://img.shields.io/badge/STATUS-FINALIZADO-brightgreen)
-![Java](https://img.shields.io/badge/Java-17%2B-orange)
+![Java](https://img.shields.io/badge/Java-21-orange)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3-green)
 ![React](https://img.shields.io/badge/React-Vite-blue)
 ![Database](https://img.shields.io/badge/H2-Database-blue)
