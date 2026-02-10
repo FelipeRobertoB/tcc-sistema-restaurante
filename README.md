@@ -41,7 +41,7 @@ Antes de começar, verifique se sua máquina possui as ferramentas necessárias.
 
 ---
 
-### **1. Java JDK 17 (ou superior)**
+### **1. Java JDK 21**
 
 * [Baixar do site oficial (Oracle)](https://www.oracle.com/java/technologies/downloads/#java17)
 * **Como testar:** abra o terminal (CMD) e digite:
