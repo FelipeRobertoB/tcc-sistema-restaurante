@@ -28,7 +28,7 @@ Este sistema moderniza o atendimento em restaurantes de pequeno porte, integrand
 
 ## 🚀 Tecnologias
 
-* **Backend:** Java 17, Spring Boot 3, H2 Database
+* **Backend:** Java 21 (LTS), Spring Boot 3, H2 Database
 * **Frontend:** React.js, Vite, Axios, CSS Modules
 
 ---
