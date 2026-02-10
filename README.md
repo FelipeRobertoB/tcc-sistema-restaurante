@@ -113,7 +113,7 @@ http://localhost:8080/swagger-ui.html
 
 ### 👤 Autor
 
-Este projeto foi desenvolvido por **[Felipe Roberto Blanco Joyce]** como requisito para obtenção do grau em Sistemas para Internet.
+Este projeto foi desenvolvido por **Felipe Roberto Blanco Joyce** como requisito para obtenção do grau em Sistemas para Internet.
 
 <a href="https://www.linkedin.com/in/felipe-roberto-blanco-joyce-31080b291/" target="_blank">
  <img src="https://img.shields.io/badge/-LinkedIn-%230077B5?style=for-the-badge&logo=linkedin&logoColor=white" target="_blank">
